@@ -2,8 +2,8 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
-    <title>Chapter 4: Appenders</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf8" />
+    <title>第四章： Appenders</title>
     <link rel="stylesheet" type="text/css" href="../css/common.css" />
     <link rel="stylesheet" type="text/css" href="../css/screen.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../css/_print.css" media="print" />
@@ -26,7 +26,7 @@
 
     <div id="content">
 
-    <h1>Chapter 4: Appenders</h1>
+    <h1>第四章： Appenders</h1>
 
     <a href="appenders_ja.html">&#x548C;&#x8A33; (Japanese translation)</a>
     <a href="appenders_zh.html">(Chinese translation)</a>
@@ -46,13 +46,11 @@
     <script src="../templates/creative.js" type="text/javascript"></script>
     <script src="../templates/setup.js" type="text/javascript"></script>
     
-    <h2 class="doAnchor" name="whatIsAnAppender">What is an Appender?</h2>
+    <h2 class="doAnchor" name="whatIsAnAppender">什么是Appender？</h2>
     
-		<p>Logback delegates the task of writing a logging event to
-		components called appenders.  Appenders must implement the <a
+		<p>Logback 用来代理日志事件的组件叫做appenders。 Appenders 必须实现这个接口 <a
 		href="../xref/ch/qos/logback/core/Appender.html"><code>ch.qos.logback.core.Appender</code></a>
-		interface.  The salient methods of this interface are summarized
-		below:
+		。  该接口的重要方法如下所示：
 		</p>
 		<pre class="prettyprint source">package ch.qos.logback.core;
   
@@ -69,52 +67,41 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
   
 }</pre>
 
-	<p>Most of the methods in the <code>Appender</code> interface are
-	setters and getters. A notable exception is the
-	<code>doAppend()</code> method taking an object instance of type
-	<em>E</em> as its only parameter. The actual type of <em>E</em>
-	will vary depending on the logback module. Within the
-	logback-classic module <em>E</em> would be of type <a
+	<p>接口 <code>Appender</code> 中的大多数方法是
+	setters 和 getters. 值得注意的方法是
+	<code>doAppend()</code> method ，它只有一个范形<em>E</em> 作为参数。
+    范形 <em>E</em> 的真实类型取决于具体的 logback 模块。 在模块
+	logback-classic 中范形 <em>E</em> 的类型是 <a
 	href="../apidocs/ch/qos/logback/classic/spi/ILoggingEvent.html">ILoggingEvent</a>
-	and within the logback-access module it would be of type <a
-	href="../apidocs/ch/qos/logback/access/spi/AccessEvent.html">AccessEvent</a>.
-	The <code>doAppend()</code> method is perhaps the most important in
-	the logback framework.  It is responsible for outputting the logging
-	events in a suitable format to the appropriate output device.
+	，而在模块 logback-access 中它的类型是 <a
+	href="../apidocs/ch/qos/logback/access/spi/AccessEvent.html">AccessEvent</a>。
+	在logback框架中方法 <code>doAppend()</code> 可能是最重要的。 它负责输出日志事件到合适的
+    输出设备中。
   </p>
 
-  <p>Appenders are named entities.  This ensures that they can be
-  referenced by name, a quality confirmed to be instrumental in
-  configuration scripts. The <code>Appender</code> interface extends
-  the <code>FilterAttachable</code> interface. It follows that one or
-  more filters can be attached to an appender instance. Filters are
-  discussed in detail in a subsequent chapter.
+  <p>Appenders 是有名称的实体。 这样能确保可以根据名称进行索引，这一点在配置脚本
+  中是非常有用的。 接口 <code>Appender</code> 继承了
+  接口 <code>FilterAttachable</code> 。 这使得一个或者多个过滤器可以附加到
+  appender 实例上。 过滤器将会在后续的章节中详细讨论。
 	</p>
 	
-	<p>Appenders are ultimately responsible for outputting logging
-	events.  However, they may delegate the actual formatting of the
-	event to a <code>Layout</code> or to an <code>Encoder</code> object.
-	Each layout/encoder is associated with one and only one appender,
-	referred to as the owning appender. Some appenders have a built-in
-	or fixed event format. Consequently, they do not require nor have a
-	layout/encoder. For example, the <code>SocketAppender</code> simply
-	serializes logging events before transmitting them over the wire.
+	<p>Appenders 最终负责日志输出事件。 然而，它可能代理到格式化事件到
+    <code>Layout</code> 或者是 <code>Encoder</code> 对象。
+	每个 layout/encoder 只关联到一个 appender。
+	有些 appenders 是内建的或者是固定的。 因此， 它不需要有
+	layout/encoder。 例如， <code>SocketAppender</code> 会在发送之前进行序列化。
 	</p>
 	
 	
 	<h2 class="doAnchor" name="AppenderBase">AppenderBase</h2>
 	
-	<p>The <a href="../xref/ch/qos/logback/core/AppenderBase.html">
-	<code>ch.qos.logback.core.AppenderBase</code></a> class is an
-	abstract class implementing the <code>Appender</code> interface.  It
-	provides basic functionality shared by all appenders, such as
-	methods for getting or setting their name, their activation status,
-	their layout and their filters.  It is the super-class of all
-	appenders shipped with logback.  Although an abstract class,
-	<code>AppenderBase</code> actually implements the
-	<code>doAppend()</code> method in the <code>Append</code> interface.
-	Perhaps the clearest way to discuss <code>AppenderBase</code> class
-	is by presenting an excerpt of actual source code.
+	<p>类 <a href="../xref/ch/qos/logback/core/AppenderBase.html">
+	<code>ch.qos.logback.core.AppenderBase</code></a> 是一个抽象类，
+	它实现了接口 <code>Appender</code> 。 它提供了基本的功能，例如：
+	获取或者设置名称、激活状态、布局以及过滤的方法。它是所有logback中appenders
+	的父类。 尽管抽象类 <code>AppenderBase</code> 已经实现了方法在接口
+    <code>Append</code> 中定义的方法 <code>doAppend()</code>。
+	下面给出类 <code>AppenderBase</code> 的源码。
 	</p>
 	
 <pre class="prettyprint source">public synchronized void doAppend(E eventObject) {
@@ -147,34 +134,28 @@ public interface Appender&lt;E> extends LifeCycle, ContextAware, FilterAttachabl
   }
 }</pre>
 	
-	<p>This implementation of the <code>doAppend()</code> method is
-	synchronized.  It follows that logging to the same appender from
+	<p>方法 <code>doAppend()</code> 的实现是同步的。
+	因此，在多个线程中调用同一个appender是安全的。也就是说当一个线程在执行
 	different threads is safe. While a thread, say <em>T</em>, is
-	executing the <code>doAppend()</code> method, subsequent calls by
-	other threads are queued until <em>T</em> leaves the
-	<code>doAppend()</code> method, ensuring <em>T</em>'s exclusive
-	access to the appender.
+	方法 <code>doAppend()</code> 时，后续的调用线程就在排队，直到
+	<em>T</em> 离开了方法 <code>doAppend()</code> ，这样确保 <em>T</em>
+    在appender中具有排他性。
 	</p>
 
-  <p>Since such synchronization is not always appropriate, logback
-  ships with <a
+  <p>由于同步并不适合所有情况，logback
+  提供的类 <a
   href="../xref/ch/qos/logback/core/UnsynchronizedAppenderBase.html"><code>ch.qos.logback.core.UnsynchronizedAppenderBase</code></a>
-  which is very similar to the <a
+  和类 <a
   href="../xref/ch/qos/logback/core/AppenderBase.html"><code>AppenderBase</code></a>
-  class. For the sake of conciseness, we will be discussing
-  <code>UnsynchronizedAppenderBase</code> in the remainder of this document.
+  很相似。为了保持简单，我们将会在文档的后面讨论类<code>UnsynchronizedAppenderBase</code>。
   </p>
 
 
-  <p>The first thing the <code>doAppend()</code> method does is to
-  check whether the guard is set to true. If it is, it immediately
-  exits. If the guard is not set, it is set to true at the next
-  statement. The guard ensures that the <code>doAppend()</code> method
-  will not recursively call itself. Just imagine that a component,
-  called somewhere beyond the <code>append()</code> method, wants to
-  log something. Its call could be directed to the very same appender
-  that just called it resulting in an infinite loop and a stack
-  overflow.
+  <p>方法 <code>doAppend()</code> 首先检查guard是否设置为true。如果是的
+  话，就立刻返回。如果不是的话，就在下一个语句中设置为true。
+  变量guard确保方法 <code>doAppend()</code> 不会递归地调用自己。想象一下
+  某个组件调用方法 <code>append()</code> ，想要记录日志。它会直接调用相同的
+  appender，会导致无限循环并栈溢出。
 	</p>
 	
 	<p>In the following statement we check whether the
